@@ -1,0 +1,82 @@
+.container-fluid{
+	margin-left: 1.2em;
+	margin-right: 1.2em;
+	width: calc(100% - 2.4em);
+}
+
+.cont{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bloque1, .bloque2, .bloque3{
+	background-color: #FEFDFD;
+	box-sizing: border-box;
+	margin-top: 1em;
+	padding:1em 1.7em;
+	box-sizing: border-box;
+	color: var(--gris);
+	box-shadow: -2px 5px 5px 5px rgba(0,0,0,.06);
+}
+
+.general label{
+	font-size: 1.6em;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+.red{
+	float: left;
+	width: 100%;
+	margin-bottom: 1em;
+	font-size: .9em;
+}
+.red img{
+	width: 2em;
+	float: left;
+}
+
+.red p{
+	width: 80%;
+	padding-left: 1em;
+	margin-bottom: 0;
+	box-sizing: border-box;
+	float: left;
+}
+
+
+.bloque2 label, .bloque3 label{
+	font-size: 1.1em;
+	display: block;
+	text-align: center;
+	font-weight: bold;
+}
+
+.bloque2 p, .bloque3 p{
+	font-size: .9em;
+}
+
+.bloque3 p{
+	text-align: justify;
+	margin-bottom: .5em;
+}
+
+.bloque2{
+	padding-bottom: .7em;
+}
+
+.bloque2 .integrantes{
+	display: flex;
+	text-align: center;	
+	margin-top: 1em;
+	justify-content: center;
+}
+
+
+.integrante img{
+	width:4.5em;
+	height: 4.5em;
+	object-fit: cover;
+	margin-bottom: .5em;
+}

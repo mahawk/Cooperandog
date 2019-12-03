@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/registro.css">
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="stylesheet" type="text/css" href="css/modal.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<img src="img/logo.png">
+	</div>
+
+	<div class="menu menuStart">
+		<ul class="menu-items">
+			<li>
+				<a href="index.html" class="opcion">
+					<img src="img/home.png">
+					<p>Inicio</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="login.html" class="opcion">
+					<img src="img/user.png">
+					<p>Iniciar sesión</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="registro.html" class="opcion">
+					<img src="img/paw.png">
+					<p>Registrarse</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="insertar">	
+	</div>
+
+	<div class="container-fluid">
+		<div class="row cont-form">
+			<div class="col-12 col-lg-4 col-md-6 col-sm-8">	
+				<h2>Registro</h2>
+				<p>Llena los siguientes campos para hacer el registro</p>
+				<form id="form_registro" method="POST" class="form" enctype="multipart/form-data">
+						<label>Nombre completo:</label>
+						<input type="text" id="nombre" name="nombre" required>
+
+						<label>Correo electrónico:</label>
+						<input type="email" id="username" name="username" required>
+
+						<label>Municipio, estado:</label>
+						<input type="text" id="estado" name="estado" required>
+
+						<label>Contraseña:</label>
+						<input type="password" id="password1" name="password1" required>
+
+						<label>Confirmar contraseña:</label>
+						<input type="password" id="password2" name="password2" required>
+
+						<label>Foto perfil:</label>
+						<div class="upload-btn-wrapper">
+							<i class="fas fa-camera-retro"></i>
+							<p id="fileText">Selecciona una foto...</p>
+							<input type="file" id="foto" name="myfile" onchange="cambiarTexto()" required/>
+						</div>
+
+						<div class="btns">
+							<button class="boton" type="submit">Registrarse</button>
+							<a href="login.html">¿Ya eres miembro? <br> Iniciar sesión </a>
+						</div>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		const URL = 'http://127.0.0.1:8000/registro/';
+		$form = document.getElementById('form_registro');
+		const htmlModalCarga = modalCarga();
+		const htmlModalExito = modalExito();
+		const htmlElementoCarga = crearTemplate(htmlModalCarga);
+		const htmlElementoExito = crearTemplate(htmlModalExito);
+		let insertar = document.querySelector('.insertar')
+
+		function isEmpty(obj) {
+		    return !obj || Object.keys(obj).length === 0;
+		}
+
+		function modalExito(){
+			return (
+				`
+				<div class="modal" id="modalExito">
+					<div class="contModal"></div>
+					<h2>¡Registro exitoso!</h2>
+					<img src="img/heart.png" alt="">
+				</div>
+				` 
+			)
+		}
+
+		function modalCarga(){
+			return(
+				`
+				<div class="modal" id="modalCarga">
+			        <div class="contModal"></div>
+			        <h2>Cargando...</h2>
+			        <i class="fas fa-dog"></i>
+			    </div>
+				`
+			)
+		}
+
+		function crearTemplate(HTMLString){
+			const html = document.implementation.createHTMLDocument();
+			html.body.innerHTML = HTMLString;
+			return html.body.children[0]
+		}
+
+		async function mandarData(url, data){
+			const response = await fetch(url, {
+				method: 'POST',
+				body: data,
+			})
+			const resp = await response.json()
+			return resp;
+		}
+
+		$form.addEventListener('submit', async (e) =>{
+			e.preventDefault();
+			const form = new FormData();
+			form.append('nombre', document.getElementById('nombre').value);
+			form.append('foto', document.getElementById('foto').files[0]);
+			form.append('username', document.getElementById('username').value);
+			form.append('estado', document.getElementById('estado').value);
+			form.append('password1', document.getElementById('password1').value);
+			form.append('password2', document.getElementById('password2').value);
+			
+			try{
+				insertar.append(htmlElementoCarga);
+				const data = await mandarData(URL, form);
+				if(isEmpty(data)){
+					insertar.after(htmlElementoExito);
+					insertar.innerHTML = "";
+					setTimeout(() => {
+						window.location.href = 'login.html';
+					}, 2000);
+				} else {
+					for(const error in data){
+						insertar.innerHTML = "";
+						if(error === 'userExist'){
+							const p = document.createElement('p');
+							p.textContent = data.userExist;
+							$username = document.getElementById('username');
+							ref = $username.nextElementSibling;
+							$usernameRef = document.getElementById('username').parentNode;
+							$usernameRef.insertBefore(p, ref);
+							$form.addEventListener('submit', (e) => {
+								p.remove()
+							})
+						}
+						if(error === 'password'){
+							const p = document.createElement('p');
+							p.textContent = data.password;
+							$pass = document.getElementById('password2');
+							ref = $pass.nextElementSibling;
+							$passRef = document.getElementById('password2').parentNode;
+							$passRef.insertBefore(p, ref);
+							$form.addEventListener('submit', (e) => {
+								p.remove()
+							})
+						}
+						if(error === 'passwordSim'){
+							const p = document.createElement('p');
+							p.textContent = data.passwordSim;
+							$pass = document.getElementById('password2');
+							ref = $pass.nextElementSibling;
+							$passRef = document.getElementById('password2').parentNode;
+							$passRef.insertBefore(p, ref);
+							$form.addEventListener('submit', (e) => {
+								p.remove()
+							})
+						}
+						if(error === 'passwordShort'){
+							const p = document.createElement('p');
+							p.textContent = data.passwordShort;
+							$pass = document.getElementById('password2');
+							ref = $pass.nextElementSibling;
+							$passRef = document.getElementById('password2').parentNode;
+							$passRef.insertBefore(p, ref);
+							$form.addEventListener('submit', (e) => {
+								p.remove()
+							})
+						}
+						if(error === 'username'){
+							if(data.username[0] === 'A user with that username already exists.'){
+								const p = document.createElement('p');
+								p.textContent = '¡Este correo ya esta registrado!';
+								$username = document.getElementById('username');
+								ref = $username.nextElementSibling;
+								$usernameRef = document.getElementById('username').parentNode;
+								$usernameRef.insertBefore(p, ref);
+								$form.addEventListener('submit', (e) => {
+									p.remove()
+								})
+							}else{
+								const p = document.createElement('p');
+								p.textContent = data.username.correo;
+								$username = document.getElementById('username');
+								ref = $username.nextElementSibling;
+								$usernameRef = document.getElementById('username').parentNode;
+								$usernameRef.insertBefore(p, ref);
+								$form.addEventListener('submit', (e) => {
+									p.remove()
+								})
+							}
+						}
+					}
+				}
+			}catch(error){
+				alert(error);
+			}
+		})
+	</script>
+</html>

@@ -1,0 +1,169 @@
+.back{
+	background-color: var(--salmon3);
+	width: 100%;
+	height: 8em;
+	position: absolute;
+	left: 0;
+	top: 3em;
+}
+
+.container-fluid{
+	margin-left: .4em;
+	margin-right: .4em;
+	width: calc(100% - .8em);
+}
+
+.cont{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bloque{
+	background-color: #FEFDFD;
+	box-sizing: border-box;
+	margin-top: 1em;
+	padding:1em 1.7em;
+	box-sizing: border-box;
+	color: var(--gris);
+	font-size: .9em;
+	box-shadow: -2px 5px 5px 5px rgba(0,0,0,.06);
+}
+
+.bloquePerfil{
+	text-align: center;
+	margin-top: 5em;
+	margin-bottom: 1.5em;
+}
+
+.bloquePerfil p, .bloquePerfil label{
+	margin-bottom: 0;
+}
+
+.contImg{
+	width: 6.5em;
+	margin-left: calc(50% - 3.25em);
+	height: 6.5em;
+	border-radius: 50%;
+	border: 3px solid #fff;
+	margin-top: -4.5em;
+}
+
+.contImg img{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.description p{
+	margin-top: .5em;
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+.info{
+	margin-top: 1em;
+}
+
+.element{
+	padding: 0;
+	text-align: center;
+}
+
+.element label{
+	font-weight: bold;
+}
+
+.element p{
+	font-size: .9em;
+}
+
+.feed{
+	margin-top: .5em;
+	color: var(--gris);
+}
+
+.feed label{
+	margin-bottom: 0;
+	font-weight: bold;
+}
+
+.feed i{
+	color: var(--rosa);
+}
+
+.feed p{
+	margin-bottom: 0;
+	text-align: justify;
+}
+
+.profile{
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.contImg2{
+	width: 3.5em;
+	height: 3.5em;
+	border-radius: 50%;
+	float: left;
+	object-fit: cover;
+	margin-top: -.3em;
+	margin-right: 1em;
+}
+
+.contImg2 img{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.extra{
+	margin-top: 1em;
+	padding-top: 1em;
+	font-size: .9em;
+	padding-bottom: 1.5em;
+	border-top: 1px solid rgba(0,0,0,.07);
+}
+
+.comentarios img{
+	width: 1.5em;
+	height: 1.5em;
+	float: left;
+	margin-right: .5em;
+}
+
+.comentarios p{
+	float: left;
+	font-weight: bold;
+}
+
+.comentarios span{
+	font-weight: bold;
+}
+
+.extra a{
+	float: right;	
+}
+
+.content img{
+	width: 100%;
+	border-radius: 2px;
+	margin-top: 1em;
+	margin-bottom: .5em;
+	object-fit: cover;
+	box-shadow: -2px 3px 5px 2px rgba(0,0,0,.1);
+}
+
+#map{
+	margin-top: 1em;
+	min-height: 100%;
+	height: 15em;
+}
+
+.map{
+	margin-bottom: 3.5em;
+	float: left;
+}

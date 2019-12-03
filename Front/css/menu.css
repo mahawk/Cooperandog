@@ -1,0 +1,54 @@
+
+.menu{
+	padding-left: 1.2em;
+	padding-right: 1.2em;
+	width: 15em;
+	position: fixed;
+	top: 3em;
+	left: -16em;
+	height: 100%;
+	z-index: 2;
+	background-color: #FBFBFB;
+	box-shadow: 2px 5px 8px 5px rgba(0,0,0,.06);
+	transition: .5s all;
+}
+
+.menuStart{
+	width: 12em;
+}
+
+.menu-items li{
+	list-style: none;
+	padding: .8em 0;
+}
+
+.opcion{
+	text-decoration: none;
+}
+
+.opcion img{
+	width: 1.5em;
+	float: left;
+	margin-right: 1em;
+}
+
+.opcion p{
+	font-weight: bold;
+	margin-bottom: 0;
+	font-size: .9em;
+	color: var(--gris);
+}
+
+.opcion:hover{
+	text-decoration: none;
+}
+
+.opcionExtra{
+	margin-top: .5em;
+	border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.mostrar{
+	left: 0;
+	transition: .5s all;
+}

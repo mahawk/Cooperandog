@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/perfil.css">
+	<link rel="stylesheet" type="text/css" href="css/publicacion.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<label>Publicación</label>
+	</div>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li>
+				<a href="inicio.html" class="opcion">
+					<img src="img/home.png">
+					<p>Página principal</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="perfil.html" class="opcion">
+					<img src="img/user.png">
+					<p>Perfil</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="adopciones.html" class="opcion">
+					<img src="img/heart.png">
+					<p>Adopciones</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="extravíos.html" class="opcion">
+					<img src="img/wanted.png">
+					<p>Extravíos</p>
+			</li>
+
+			<li>
+				<a href="rescates.html" class="opcion">
+					<img src="img/pin.png">
+					<p>Encuentros/Rescates</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="eventos.html" class="opcion">
+					<img src="img/calendar.png">
+					<p>Eventos</p>
+				</a>
+			</li>
+
+			<li class="opcionExtra">
+				<a href="acerca.html" class="opcion">
+					<img src="img/info.png">
+					<p>Acerca de</p>
+				</a>
+			</li>
+
+			<li>
+				<a onclick="logout()" class="opcion">
+					<img src="img/exit.png">
+					<p>Cerrar sesión</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+
+	<div class="container-fluid">
+		<div class="row cont">
+			<div class="col-12 col-lg-8 col-md-8">
+				<div class="feed">
+					
+
+					<div class="bloque">
+						<div id="publicacionExtravio"></div>
+						
+						<div class="containerComentarios">
+							<div class="comentar">
+								<div id="fotoUsuario"></div>
+								<form method="POST" id="formComentario">
+									<textarea id="comentario" placeholder="Escribe algo..." required></textarea>
+									<button class="boton">Comentar</button>
+								</form>
+							</div>
+							<div id="contenedorComentarios" class="mainComentarios"></div>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMR5-evmkPyXRv3bgo2VCinUb3FDUy2Zk"></script>
+	<script type="text/javascript">
+		(async function cargar(){
+			const id = localStorage.getItem('id');
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			const URL = `http://127.0.0.1:8000/extravios/extravio/${id}/`;
+			const URLPost = `http://127.0.0.1:8000/extravios/extravio/comentar/${id}/${usuarioJSON.user.username}/`;
+			const contenedorPubli = document.getElementById('publicacionExtravio');
+			const contenedorComentarios = document.getElementById('contenedorComentarios');
+			
+			async function obtenerData(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			async function mandarData(url, data){
+				const response = await fetch(url, {
+					method: 'POST',
+					body: data,
+				})
+				const resp = await response.json()
+				return resp;
+			}
+			function initMap() {
+			    var uluru = {
+			    	lat: parseFloat(data.success.extravio.lat), 
+			    	lng: parseFloat(data.success.extravio.lon)
+			    }
+
+			    var map = new google.maps.Map(publicacion, {
+			    	center: uluru,
+			        zoom: 13,
+			    });
+
+			    var icon = {
+			    	url: 'img/heart.png',
+			        scaledSize: new google.maps.Size(50, 50), // size
+			    }
+
+			    var marker = new google.maps.Marker({
+			    	position: uluru,
+			        icon: icon,
+			        map: map,
+			    });
+		  }
+
+			const data = await obtenerData(URL);
+
+			function initMap() {
+			    
+		  }
+
+			function bloqueExtravio(extravio, comentarios){
+				user = extravio.usuario;
+				userJSON = JSON.parse(user);
+				fecha = extravio.fecha.split('-');
+				hora = extravio.hora.split(':');
+				return(
+					`
+					<div>
+						<p class="fecha">${fecha[2]}/${fecha[1]}/${fecha[0]} ${hora[0]}:${hora[1]} ${parseInt(hora[0]) >= 12 ? ' p.m.' : ' a.m.'}</p>
+							<div class="profile">
+								<div class="contImg2">
+									<img src="http://127.0.0.1:8000/media/${userJSON[1]}">
+								</div>
+								<div class="info2">
+									<label>${userJSON[0]}</label>
+									<div class="category">
+										<i class="fas fa-paw"></i>
+										<small>Extravíos</small>
+									</div>
+								</div>
+							</div>
+							<div class="content">
+								<h4 style="font-size: 1.2em;
+								color: var(--salmon3);
+								margin-bottom: 0;
+								    text-align: center;
+								    width: 100%;
+								    display: block;
+								    font-weight: bold;">${extravio.anuncio.toUpperCase()}</h4>
+								<small style="margin-bottom: 1em;
+								font-size: .9em;
+								text-align: center;
+								width: 100%;
+								display: block;
+								font-weight: bold;">RECOMPENSA: $${extravio.recompensa}</small>
+								<p>${extravio.descripcion}</p>
+
+								<div class="details row">
+									<div class="col-6 col-lg-4 details-left">
+										<label>Raza:</label>
+										<p>${extravio.raza}</p>
+
+										<label>Color:</label>
+										<p>${extravio.color}</p>
+									</div>
+
+									<div class="col-6 col-lg-4 details-right">
+										<label>Nombre:</label>
+										<p>${extravio.nombre}</p>
+
+										<label>Tamaño:</label>
+										<p>${extravio.tamano}</p>
+									</div>
+
+									<div class="col-12 col-lg-4">
+										<label>Fecha extravío:</label>
+										<p>${extravio.fecha_extravio}</p>
+
+										<label>Señas particulares:</label>
+										<p>${extravio.senas_particulares}</p>
+									</div>
+
+									<div class="col-12 col-lg-6 map">
+										<label>Lugar extravío</label>
+										<div class="mapaExt" id="map" data-lat="${extravio.lat}" data-lng="${extravio.lon}"></div>
+									</div>
+									<div class="col-12 col-lg-6">
+										<label>Foto:</label>
+										<img src="http://127.0.0.1:8000${extravio.foto}">
+									</div>
+								</div>
+							</div>
+							<div class="extra">
+								<div class="comentarios">
+									<img src="img/comentarios.png">
+									<p><span id="numComentariosTotal">${comentarios.length}</span> comentarios</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					`
+				)
+			}
+
+			function bloqueComentario(comentario){
+				user = comentario.usuario;
+				userJSON = JSON.parse(user);
+				return(
+					`
+						<div class="comentario">
+							<img src="http://127.0.0.1:8000/media/${userJSON[1]}">
+							<a href="" class="usuarioComentario">${userJSON[0]}</a>
+							<p>${comentario.comentario}</p>
+						</div>
+					`
+				)
+			}
+
+			function crearTemplate(HTMLString){
+				const html = document.implementation.createHTMLDocument();
+				html.body.innerHTML = HTMLString;
+				return html.body.children[0]
+			}
+
+			function ponerAtributos(elemento, atributos){
+				for(const atributo in atributos){
+					elemento.setAttribute(atributo, atributos[atributo])
+				}
+			}
+
+			function renderComentarios(lista){
+				if(lista.length === 0){
+					const p = document.createElement('p');
+					p.textContent = 'Aún no hay comentarios.';
+					ponerAtributos(p, {
+						id: 'noComentarios',
+						class: 'comentario'
+					});
+					contenedorComentarios.append(p)
+				} else {
+					lista.forEach((comentario) => {
+						const htmlExtravioComentario = bloqueComentario(comentario);
+						const htmlExtravioComentarioElemento = crearTemplate(htmlExtravioComentario);
+						contenedorComentarios.append(htmlExtravioComentarioElemento);
+					})
+				}
+				
+			}
+
+			const htmlExtravioPub = bloqueExtravio(data.success.extravio, data.success.comentarios);
+			const htmlElementoExtravioPub = crearTemplate(htmlExtravioPub);
+			contenedorPubli.append(htmlElementoExtravioPub);
+			
+
+			const imagenUsuario = document.getElementById('fotoUsuario');
+			const imgn = document.createElement('img');
+			ponerAtributos(imgn, {
+				src: `http://127.0.0.1:8000${usuarioJSON.usuario.foto}`
+			});
+			imagenUsuario.append(imgn);
+
+			renderComentarios(data.success.comentarios);
+
+			if(document.body.contains(document.getElementById('map'))){
+				var uluru = {
+			    	lat: parseFloat(document.getElementById('map').getAttribute("data-lat")), 
+			    	lng: parseFloat(document.getElementById('map').getAttribute("data-lng"))
+			    }
+
+			    var map = new google.maps.Map(document.getElementById('map'), {
+			    	center: uluru,
+			        zoom: 13,
+			    });
+
+			    var icon = {
+			    	url: 'img/heart.png',
+			        scaledSize: new google.maps.Size(50, 50), // size
+			    }
+
+			    var marker = new google.maps.Marker({
+			    	position: uluru,
+			    	animation: google.maps.Animation.DROP,
+			        icon: icon,
+			        map: map,
+			    });
+			}
+
+			const $form = document.querySelector('#formComentario');
+			$form.addEventListener('submit', async (e) => {
+				e.preventDefault()
+
+				const form = new FormData();
+				form.append('comentario', document.getElementById('comentario').value);
+				let coment = `
+					<div class="comentario">
+						<img src="http://127.0.0.1:8000${usuarioJSON.usuario.foto}">
+						<a href="" class="usuarioComentario">${usuarioJSON.usuario.nombre}</a>
+						<p>${form.get('comentario')}</p>
+					</div>
+				`;
+				document.getElementById('comentario').value = "";
+				try{
+					const data = await mandarData(URLPost, form);
+					if(data.success){
+						let htmlElementoExtraPub = crearTemplate(coment)
+						if(document.body.contains(document.getElementById('noComentarios')))
+							document.getElementById('noComentarios').remove();
+						num = parseInt(document.getElementById('numComentariosTotal').innerText);
+						span = document.getElementById('numComentariosTotal');
+						span.textContent = num + 1; 
+						contenedorComentarios.append(htmlElementoExtraPub);
+					}else{
+						alert('No')
+					}
+				} catch(error){
+					alert(error);
+				}
+			})
+		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
+	</script>
+</html>

@@ -1,0 +1,54 @@
+.container-fluid{
+	margin-left: .4em;
+	margin-right: .4em;
+	width: calc(100% - .8em);
+}
+
+.cont{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bloque{
+	background-color: #FEFDFD;
+	box-sizing: border-box;
+	margin-top: 1em;
+	padding:1em 1.7em;
+	box-sizing: border-box;
+	text-align: center;
+	color: var(--gris);
+	font-size: .9em;
+	box-shadow: -2px 5px 5px 5px rgba(0,0,0,.06);
+}
+
+
+.datos label{
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.datos p{
+	margin-bottom: 0;
+	font-size: .9em;
+}
+
+.descripcion{
+	text-align: justify;
+	font-size: .9em;
+}
+
+
+.tarjeta p{
+	color: #fff;
+	text-align: center;
+	background-color: var(--rojo);
+	padding: 5px;
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+.bloque img{
+	margin: 1em 0;
+	width: 100%;
+	box-shadow: -2px 3px 5px 2px rgba(0,0,0,.08);
+}

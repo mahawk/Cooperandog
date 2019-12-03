@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/perfil.css">
+	<link rel="stylesheet" type="text/css" href="css/adopciones.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<label>Rescates</label>
+	</div>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li>
+				<a href="inicio.html" class="opcion">
+					<img src="img/home.png">
+					<p>Página principal</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="perfil.html" class="opcion">
+					<img src="img/user.png">
+					<p>Perfil</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="adopciones.html" class="opcion">
+					<img src="img/heart.png">
+					<p>Adopciones</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="extravíos.html" class="opcion">
+					<img src="img/wanted.png">
+					<p>Extravíos</p>
+			</li>
+
+			<li>
+				<a href="rescates.html" class="opcion">
+					<img src="img/pin.png">
+					<p>Encuentros/Rescates</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="eventos.html" class="opcion">
+					<img src="img/calendar.png">
+					<p>Eventos</p>
+				</a>
+			</li>
+
+			<li class="opcionExtra">
+				<a href="acerca.html" class="opcion">
+					<img src="img/info.png">
+					<p>Acerca de</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="" class="opcion">
+					<img src="img/exit.png">
+					<p>Cerrar sesión</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+
+	<div class="container-fluid">
+		<div class="row cont">
+			<div class="back">
+				<a href="nuevoRescate.html" class="boton">Agregar rescate</a>
+			</div>
+			<div class="col-12 col-lg-8 col-md-8">
+				<div class="feed">
+					
+					<div id="bloqueRescate"></div>
+
+				</div>				
+			</div>
+		</div>
+	</div>
+
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		(async function cargar(){
+			localStorage.removeItem('id');
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			const URL = `http://127.0.0.1:8000/rescates/`
+			const URLCom = `http://127.0.0.1:8000/rescates/comentarios/`
+			const contenedor = document.getElementById('bloqueRescate');
+
+			async function obtenerData(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			async function obtenerNumComentario(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			const data = await obtenerData(URL);
+			const dataCom = await obtenerNumComentario(URLCom);
+
+			function bloqueRescate(rescate, comentarios){
+				user = rescate.usuario;
+				userJSON = JSON.parse(user);
+				fecha = rescate.fecha.split('-');
+				hora = rescate.hora.split(':');
+				return(
+					`
+					<div class="bloque">
+						<p class="fecha">${fecha[2]}/${fecha[1]}/${fecha[0]} ${hora[0]}:${hora[1]} ${parseInt(hora[0])>=12 ? ' p.m.' : ' a.m.'}</p>
+						<div class="profile">
+							<div class="contImg2">
+								<img src="http://127.0.0.1:8000/media/${userJSON[1]}">
+							</div>
+							<div class="info2">
+								<label>${userJSON[0]}</label>
+								<div class="category">
+									<i class="fas fa-paw"></i>
+									<small>Rescates</small>
+								</div>
+							</div>
+						</div>
+						<div class="content">
+							<p>${rescate.descripcion}</p>
+							<img src="http:127.0.0.1:8000${rescate.foto}">
+						</div>
+						<div class="extra">
+							<div class="comentarios">
+								<img src="img/comentarios.png">
+								<p><span>${comentarios}</span> comentarios</p>
+							</div>
+							<a id="etiquetasA" href="publicacionRescate.html">Ver más</a>
+							<input type="hidden" value="${rescate.id}">
+						</div>
+					</div>
+					`
+				)
+			}
+
+			function crearTemplate(HTMLString){
+				const html = document.implementation.createHTMLDocument();
+				html.body.innerHTML = HTMLString;
+				return html.body.children[0]
+			}
+
+			function renderRescates(lista){
+				let contador = 0;
+				lista.forEach((rescate) => {
+					const htmlRescate = bloqueRescate(rescate,  dataCom.comentarios[contador]);
+					const htmlRescateElemento = crearTemplate(htmlRescate);
+					contenedor.append(htmlRescateElemento);
+					contador += 1;
+				})
+			}
+
+			renderRescates(data.rescates);
+
+			const as = document.querySelectorAll('#etiquetasA');
+			for(etiqueta of as){
+				etiqueta.addEventListener('click', async (e) => {
+					const id = e.target.nextElementSibling.value;
+					// alert(id);
+					localStorage.setItem('id', id);
+				})
+			}
+		})()
+	</script>
+</html>

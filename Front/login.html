@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/registro.css">
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="stylesheet" type="text/css" href="css/modal.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<img src="img/logo.png">
+	</div>
+
+	<div class="menu menuStart">
+		<ul class="menu-items">
+			<li>
+				<a href="index.html" class="opcion">
+					<img src="img/home.png">
+					<p>Inicio</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="login.html" class="opcion">
+					<img src="img/user.png">
+					<p>Iniciar sesión</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="registro.html" class="opcion">
+					<img src="img/paw.png">
+					<p>Registrarse</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="back">
+	</div>
+	<div class="insertar">	
+	</div>
+	<div class="container-fluid">
+		<div class="row cont-form cont-form-login">
+			<div class="col-12 col-lg-4 col-md-6 col-sm-8">	
+				<img src="img/1.jpg" class="mx-auto d-block rounded-circle">
+				<h2>Bienvenido a Cooperandog</h2>
+				<p id="referencia">Inicia sesión para continuar</p>
+				<form id="form_login" method="POST" class="form">
+						<label>Correo electrónico:</label>
+						<input type="email" id="username" name="username">
+
+						<label>Contraseña:</label>
+						<input type="password" id="password" name="password">
+
+						<div class="btns">
+							<button class="boton" type="submit">Iniciar sesión</button>
+							<a href="registro.html">¿Todavía no eres miembro? <br> Regístrate </a>
+						</div>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		const URL = 'http://127.0.0.1:8000/login/';
+		$form = document.getElementById('form_login');
+		const htmlModalCarga = modalCarga();
+		const htmlElementoCarga = crearTemplate(htmlModalCarga);
+		let insertar = document.querySelector('.insertar')
+
+		function modalExito(nombre, foto){
+			return (
+				`
+				<div class="modal" id="modalExito">
+					<div class="contModal"></div>
+					<h2>¡Bienvenid@ ${nombre}!</h2>
+					<img src="http:127.0.0.1:8000${foto}" alt="">
+				</div>
+				` 
+			)
+		}
+
+		function modalCarga(){
+			return(
+				`
+				<div class="modal" id="modalCarga">
+			        <div class="contModal"></div>
+			        <h2>Cargando...</h2>
+			        <i class="fas fa-dog"></i>
+			    </div>
+				`
+			)
+		}
+
+		function crearTemplate(HTMLString){
+			const html = document.implementation.createHTMLDocument();
+			html.body.innerHTML = HTMLString;
+			return html.body.children[0]
+		}
+
+		async function mandarData(url, data){
+			const response = await fetch(url, {
+				method: 'POST',
+				body: data
+			})
+			const resp = await response.json();
+			return resp;
+		}
+
+		$form.addEventListener('submit', async (e) =>{
+			e.preventDefault();
+
+			const form = new FormData();
+			form.append('username', document.getElementById('username').value);
+			form.append('password', document.getElementById('password').value);
+
+			try{
+				insertar.append(htmlElementoCarga);
+				const data = await mandarData(URL, form);
+				console.log(data)
+				if(data.success){
+					nombre = data.success.usuario.nombre.split(' ');
+					const htmlModalExito = modalExito(nombre[0], data.success.usuario.foto);
+					const htmlElementoExito = crearTemplate(htmlModalExito);
+					insertar.after(htmlElementoExito);
+					insertar.innerHTML = "";
+-					sessionStorage.setItem('usuario', JSON.stringify(data.success));
+					setTimeout(() => {
+						window.location.href = 'inicio.html';
+					}, 2000);
+				} else {
+					insertar.innerHTML = "";
+					const p = document.createElement('p');
+					p.textContent = data.error;
+					pref = document.getElementById('referencia');
+					psib = pref.nextElementSibling;
+					prefp = document.getElementById('referencia').parentNode;
+					prefp.insertBefore(p, psib);
+					$form.addEventListener('submit', (e) => {
+						p.remove();
+					})
+				}
+			} catch(error){
+				alert(error);
+			}
+
+		})
+	</script>
+</html>

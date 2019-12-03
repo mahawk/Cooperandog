@@ -1,0 +1,30 @@
+.back{
+	position: fixed;
+	padding-bottom: 1em;
+	top: 3em;
+	display: flex;
+	justify-content: center;
+	z-index: 1;
+	height: 4.5em;
+	width: 100%;
+	background-color: var(--grisFondo);
+	/*background-color: rgba(0,0,0,.05);*/
+}
+
+.back .boton{
+	margin-top: 1em;
+	font-weight: bold;
+	text-align: center;
+	color: #fff;
+	/*margin-left: 1.2em;
+	margin-right: 1.2em;
+	width: calc(100% - 2.4em);*/
+	background-color: var(--salmon3);
+}
+
+.container-fluid{
+	margin-left: .4em;
+	margin-right: .4em;
+	width: calc(100% - .8em);
+	margin-top: 7em;
+}

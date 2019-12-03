@@ -1,0 +1,39 @@
+.content h4, .content small{
+	text-align: center;
+	width: 100%;
+	display: block;
+	font-weight: bold;
+}
+
+.content h4{
+	font-size: 1.2em;
+	color: var(--salmon3);
+	margin-bottom: 0;
+}
+
+.content small{
+	margin-bottom: 1em;
+	font-size: .9em;
+}
+
+.content p{
+	font-size: .9em;
+}
+
+.details{
+	margin-top: 1em;
+}
+
+.details label{
+	font-size: .9em;
+	display: block;
+}
+
+.details p{
+	margin-bottom: .5em;
+	width: 100%;
+}
+
+.details .details-left, .details .details-right{
+	margin-bottom: .5em;
+}

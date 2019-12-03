@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/perfil.css">
+	<link rel="stylesheet" type="text/css" href="css/publicacion.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<label>Publicación</label>
+	</div>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li>
+				<a href="inicio.html" class="opcion">
+					<img src="img/home.png">
+					<p>Página principal</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="perfil.html" class="opcion">
+					<img src="img/user.png">
+					<p>Perfil</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="adopciones.html" class="opcion">
+					<img src="img/heart.png">
+					<p>Adopciones</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="extravíos.html" class="opcion">
+					<img src="img/wanted.png">
+					<p>Extravíos</p>
+			</li>
+
+			<li>
+				<a href="rescates.html" class="opcion">
+					<img src="img/pin.png">
+					<p>Encuentros/Rescates</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="eventos.html" class="opcion">
+					<img src="img/calendar.png">
+					<p>Eventos</p>
+				</a>
+			</li>
+
+			<li class="opcionExtra">
+				<a href="acerca.html" class="opcion">
+					<img src="img/info.png">
+					<p>Acerca de</p>
+				</a>
+			</li>
+
+			<li>
+				<a onclick="logout()" class="opcion">
+					<img src="img/exit.png">
+					<p>Cerrar sesión</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+
+	<div class="container-fluid">
+		<div class="row cont">
+			<div class="col-12 col-lg-8 col-md-8">
+				<div class="feed">
+					
+
+					<div class="bloque">
+						<div id="publicacionAdopcion"></div>
+						
+						<div class="containerComentarios">
+							<div class="comentar">
+								<div id="fotoUsuario"></div>
+								<form method="POST" id="formComentario">
+									<textarea id="comentario" placeholder="Escribe algo..."></textarea>
+									<button class="boton">Comentar</button>
+								</form>
+							</div>
+							<div id="contenedorComentarios" class="mainComentarios"></div>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		(async function cargar(){
+			const id = localStorage.getItem('id');
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			const URL = `http://127.0.0.1:8000/rescates/rescate/${id}/`;
+			const URLPost = `http://127.0.0.1:8000/rescates/rescate/comentar/${id}/${usuarioJSON.user.username}/`;
+			const contenedorPerfil = document.getElementById('publicacionAdopcion');
+			const contenedorComentarios = document.getElementById('contenedorComentarios');
+			
+			async function obtenerData(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			async function mandarData(url, data){
+				const response = await fetch(url, {
+					method: 'POST',
+					body: data,
+				})
+				const resp = await response.json()
+				return resp;
+			}
+
+			const data = await obtenerData(URL);
+
+			function bloqueRescate(rescate, comentarios){
+				user = rescate.usuario;
+				userJSON = JSON.parse(user);
+				fecha = rescate.fecha.split('-');
+				hora = rescate.hora.split(':');
+				return(
+					`
+					<div>
+						<p class="fecha">${fecha[2]}/${fecha[1]}/${fecha[0]} ${hora[0]}:${hora[1]} ${parseInt(hora[0]) >= 12 ? ' p.m.' : ' a.m.'}</p>
+						<div class="profile">
+							<div class="contImg2">
+								<img src="http://127.0.0.1:8000/media/${userJSON[1]}">
+							</div>
+							<div class="info2">
+								<label>${userJSON[0]}</label>
+								<div class="category">
+									<i class="fas fa-paw"></i>
+									<small>Adopciones</small>
+								</div>
+							</div>
+						</div>
+						<div class="content">
+							<p>${rescate.descripcion}</p>
+							<img src="http://127.0.0.1:8000${rescate.foto}">
+						</div>
+						<div class="extra">
+							<div class="comentarios">
+								<img src="img/comentarios.png">
+								<p><span id="numComentariosTotal">${comentarios.length}</span> comentarios</p>
+							</div>
+						</div>
+					</div>
+					`
+				)
+			}
+
+			function bloqueComentario(comentario){
+				user = comentario.usuario;
+				userJSON = JSON.parse(user);
+				return(
+					`
+						<div class="comentario">
+							<img src="http://127.0.0.1:8000/media/${userJSON[1]}">
+							<a href="" class="usuarioComentario">${userJSON[0]}</a>
+							<p>${comentario.comentario}</p>
+						</div>
+					`
+				)
+			}
+
+			function crearTemplate(HTMLString){
+				const html = document.implementation.createHTMLDocument();
+				html.body.innerHTML = HTMLString;
+				return html.body.children[0]
+			}
+
+			function ponerAtributos(elemento, atributos){
+				for(const atributo in atributos){
+					elemento.setAttribute(atributo, atributos[atributo])
+				}
+			}
+
+			function renderComentarios(lista){
+				if(lista.length === 0){
+					const p = document.createElement('p');
+					p.textContent = 'Aún no hay comentarios.';
+					ponerAtributos(p, {
+						id: 'noComentarios',
+						class: 'comentario'
+					});
+					contenedorComentarios.append(p)
+				} else {
+					lista.forEach((comentario) => {
+						const htmlAdopcionComentario = bloqueComentario(comentario);
+						const htmlAdopcionComentarioElemento = crearTemplate(htmlAdopcionComentario);
+						contenedorComentarios.append(htmlAdopcionComentarioElemento);
+					})
+				}
+				
+			}
+
+			
+			const htmlRescate = bloqueRescate(data.success.rescate, data.success.comentarios);
+			const htmlElementoRescate = crearTemplate(htmlRescate);
+			contenedorPerfil.append(htmlElementoRescate);
+
+			const imagenUsuario = document.getElementById('fotoUsuario');
+			const imgn = document.createElement('img');
+			ponerAtributos(imgn, {
+				src: `http://127.0.0.1:8000${usuarioJSON.usuario.foto}`
+			});
+			imagenUsuario.append(imgn);
+
+			renderComentarios(data.success.comentarios);
+
+			const $form = document.querySelector('#formComentario');
+			$form.addEventListener('submit', async (e) => {
+				e.preventDefault()
+
+				const form = new FormData();
+				form.append('comentario', document.getElementById('comentario').value);
+
+				let coment = `
+					<div class="comentario">
+						<img src="http://127.0.0.1:8000${usuarioJSON.usuario.foto}">
+						<a href="" class="usuarioComentario">${usuarioJSON.usuario.nombre}</a>
+						<p>${form.get('comentario')}</p>
+					</div>
+				`;
+				document.getElementById('comentario').value = "";
+				try{
+					const data = await mandarData(URLPost, form);
+					if(data.success){
+						let htmlElementoExtraPub = crearTemplate(coment)
+						if(document.body.contains(document.getElementById('noComentarios')))
+							document.getElementById('noComentarios').remove();
+						num = parseInt(document.getElementById('numComentariosTotal').innerText);
+						span = document.getElementById('numComentariosTotal');
+						span.textContent = num + 1; 
+						contenedorComentarios.append(htmlElementoExtraPub);
+					}else{
+						alert('No')
+					}
+				} catch(error){
+					alert(error);
+				}
+			})
+		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
+	</script>
+</html>

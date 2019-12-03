@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/evento.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<label>Evento</label>
+	</div>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li>
+				<a href="inicio.html" class="opcion">
+					<img src="img/home.png">
+					<p>Página principal</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="perfil.html" class="opcion">
+					<img src="img/user.png">
+					<p>Perfil</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="adopciones.html" class="opcion">
+					<img src="img/heart.png">
+					<p>Adopciones</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="extravíos.html" class="opcion">
+					<img src="img/wanted.png">
+					<p>Extravíos</p>
+			</li>
+
+			<li>
+				<a href="rescates.html" class="opcion">
+					<img src="img/pin.png">
+					<p>Encuentros/Rescates</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="eventos.html" class="opcion">
+					<img src="img/calendar.png">
+					<p>Eventos</p>
+				</a>
+			</li>
+
+			<li class="opcionExtra">
+				<a href="acerca.html" class="opcion">
+					<img src="img/info.png">
+					<p>Acerca de</p>
+				</a>
+			</li>
+
+			<li>
+				<a onclick="logout()" class="opcion">
+					<img src="img/exit.png">
+					<p>Cerrar sesión</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="container-fluid">
+		<div class="row cont">
+			<div class="col-12 col-lg-8 col-md-8">
+				
+				<div id="publicacionEvento"></div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		(async function carga(){
+			const id = localStorage.getItem('id');
+			const URL = `http://127.0.0.1:8000/eventos/evento/${id}/`;
+			const contenedor = document.getElementById('publicacionEvento');
+
+			async function obtenerData(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			const data = await obtenerData(URL);
+
+			function bloqueEvento(evento){
+				const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+				fecha = evento.fecha.split('-');
+				dia = new Date(evento.fecha);
+				DIAS = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+				hora1 = evento.hora_inicio.split(':');
+				hora2 = evento.hora_final.split(':');
+				return(
+					`
+					<div class="bloque">
+						<div class="datos">
+							<label>${evento.nombre}</label>
+							<p>${DIAS[dia.getDay()]} ${fecha[2]} de ${MESES[fecha[1]-1]} de ${fecha[0]}</p>
+							<p>De ${hora1[0]} ${parseInt(hora1[0]) >= 12 ? ' p.m.' : ' a.m.'}  a ${hora1[0]} ${parseInt(hora2[0]) >= 12 ? ' p.m.' : ' a.m.'}</p>
+							<p>${evento.lugar}</p>
+						</div>
+						<img src="http://127.0.0.1:8000${evento.foto}" class="mx-auto d-block">
+						<p class="descripcion">
+							${evento.descripcion}
+						</p>
+						<div class="tarjeta">
+							<p>${fecha[2]} de ${MESES[fecha[1]-1]} de ${fecha[0]}</p>
+						</div>
+					</div>
+
+					`
+				)
+			}
+
+			function crearTemplate(HTMLString){
+				const html = document.implementation.createHTMLDocument();
+				html.body.innerHTML = HTMLString;
+				return html.body.children[0]
+			}
+
+
+			const htmlEvento = bloqueEvento(data.success.evento);
+			const htmlEventoElemento = crearTemplate(htmlEvento);
+			contenedor.append(htmlEventoElemento);
+
+		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
+	</script>
+</html>

@@ -1,0 +1,79 @@
+body{
+	background-color: #fff !important;
+}
+
+.header{
+	/*background-image: url('https://lh3.googleusercontent.com/iQOB1eBEPl0hdBJFql4HsvgX8fu7EZ8_Bb9BTs2IRNOvIUl2aCwSxyh7uFKAh612Ev_EGvM=s168');*/
+	background-image: url('../img/portada.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: top;
+}
+
+.cont-header{
+	padding-top: 1.5em;
+	padding-bottom: 1em;
+	color: #fff;
+	background-color: rgba(0,0,0,.3);
+}
+
+.header label{
+	font-size: 1.6em; 
+	font-weight: bold;
+}
+
+.header p{
+	/*margin: 1em 0em;*/
+	font-size: .9em;
+	margin-top: .5em;
+	margin-bottom: 2em;
+}
+
+.header .boton{
+	background-color: var(--salmon);
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
+
+.content{
+	text-align: center;
+	color: var(--gris);
+	padding-bottom: 2em;
+}
+
+.content p{
+	font-size: .9em;
+	margin-bottom: 0;
+}
+
+.descripcion, .opciones{
+	justify-content: center;
+	color: var(--gris);
+	padding-top: 2em;
+}
+
+.descripcion h1, .opciones h2{
+	font-weight: bold;
+	width: 100%;
+	font-size: 1.4em;
+}
+
+.opciones h2{
+	font-size: 1.2em;
+}
+.opcion{
+	width: 100%;
+	padding-top: 1.5em;
+}
+
+.opcion i{
+	color: var(--rosa);
+	font-size: 2.3em;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.opcion label{
+	font-weight: bold;
+	font-size: 1em;
+}

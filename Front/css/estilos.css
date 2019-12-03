@@ -1,0 +1,57 @@
+:root{
+	--salmon: #F47030;
+	--salmon2: #F6986C;
+	--salmon3: #F7996C;
+	--gris: #656565;
+	--rosa: #F060BD;
+	/*--grisFondo: #F1EEEE;*/
+	--grisFondo: #F5F3F3;
+	--rojo: #FC7171;
+}
+
+*{
+	padding: 0;
+	margin: 0;
+	font-family: 'Roboto', sans-serif;
+	font-weight: lighter;
+}
+
+body{
+	background-color: var(--grisFondo);
+}
+
+.container-fluid{
+	margin-bottom: 2em;
+	margin-top: 3em;
+}
+
+
+.boton{
+	color: #fff;
+	text-decoration: none;
+	padding: 7px 25px;
+	border-radius: 3px;
+	border: none;
+	font-weight: bold;
+	cursor: pointer;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.boton:hover{
+	text-decoration: none;
+	color: #fff;
+	/*padding: 6px 23px;*/
+}
+
+a{
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover{
+	text-decoration: none;
+	outline: none;
+	color: #5993FF;
+	cursor: pointer;
+}

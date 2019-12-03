@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Cooperandog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="css/form.css">
+	<link rel="stylesheet" type="text/css" href="css/perfil.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="stylesheet" type="text/css" href="css/modal.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet"> 
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="nav">
+		<i class="fas fa-bars" id="menu"></i>
+		<label>Nuevo Extravío</label>
+	</div>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li>
+				<a href="incio.html" class="opcion">
+					<img src="img/home.png">
+					<p>Página principal</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="perfil.html" class="opcion">
+					<img src="img/user.png">
+					<p>Perfil</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="adopciones.html" class="opcion">
+					<img src="img/heart.png">
+					<p>Adopciones</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="extravíos.html" class="opcion">
+					<img src="img/wanted.png">
+					<p>Extravíos</p>
+			</li>
+
+			<li>
+				<a href="rescates.html" class="opcion">
+					<img src="img/pin.png">
+					<p>Encuentros/Rescates</p>
+				</a>
+			</li>
+
+			<li>
+				<a href="eventos.html" class="opcion">
+					<img src="img/calendar.png">
+					<p>Eventos</p>
+				</a>
+			</li>
+
+			<li class="opcionExtra">
+				<a href="acerca.html" class="opcion">
+					<img src="img/info.png">
+					<p>Acerca de</p>
+				</a>
+			</li>
+
+			<li>
+				<a onclick="logout()" class="opcion">
+					<img src="img/exit.png">
+					<p>Cerrar sesión</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="insertar">	
+	</div>
+
+	<div class="container-fluid">
+		<div class="row cont">
+			<div class="col-12 col-lg-4 col-md-6">
+				<div class="bloque">
+					<h1>Nuevo Extravío</h1>
+					<form id="formExtravio" method="POST" class="form">
+
+						<label>Anuncio:</label>
+						<input type="text" id="anuncio" name="" required>
+
+						<label>Recompensa:</label>
+						<input type="number" id="recompensa" name="" required>
+
+						<label>Raza:</label>
+						<input type="text" id="raza" name="" required>
+
+						<label>Color:</label>
+						<input type="text" id="color" name="" required>
+
+						<label>Fecha de extravío:</label>
+						<input type="date" id="fechaExtravio" name="" required>
+
+						<label>Nombre:</label>
+						<input type="text" id="nombre" name="" required>
+
+						<label>Tamaño:</label>
+						<input type="text" id="tamanio" name="" required>
+
+						<label>Señas particulares:</label>
+						<textarea id="senasPart" required></textarea>
+
+						<label>Lugar extravío:</label>
+						<div id="map"></div>
+
+						<label>Descripción extravío:</label>
+						<textarea id="descrpcion" required></textarea>
+
+						<label>Foto perro:</label>
+						<div id="referenciaFoto" class="upload-btn-wrapper">
+							<i class="fas fa-camera-retro"></i>
+							<p id="fileText">Selecciona una foto...</p>
+							<input type="file" id="foto" name="myfile" onchange="cambiarTexto()" required />
+						</div>
+
+						<button type="submit" class="boton">Agregar evento</button>
+					</form>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+</body>
+	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+
+	<!-- javascripts para mapa -->
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMR5-evmkPyXRv3bgo2VCinUb3FDUy2Zk&callback=initMap"></script>
+	<script>
+		var map;
+		var marker;
+	  	async function initMap() {
+			function localizacion(posicion){
+      			latitude = posicion.coords.latitude;
+      			longitude = posicion.coords.longitude;
+
+      			map = new google.maps.Map(document.getElementById('map'), {
+		    	center: {lat:  latitude, lng: longitude},
+	     		zoom: 13,
+				});
+
+				var icon = {
+		          url: 'img/heart.png',
+		          scaledSize: new google.maps.Size(50, 50), // size
+		        }
+
+		        /*var label = {
+		          text: '¡Perrito extraviado!',
+		          color: 'gray',
+		        }*/
+
+		        marker = new google.maps.Marker({
+		          position: {lat:  latitude, lng: longitude},
+		          /*label: label,*/
+		          draggable: true,
+      			  animation: google.maps.Animation.DROP,
+		          icon: icon,
+		          map: map,
+		        });
+      		}
+
+      		function error(){
+      			alert('¡No se pudó obtener tu localización!');
+      			map = new google.maps.Map(document.getElementById('map'), {
+		    	center: {lat:  20.5902835, lng: -100.3926442},
+	     		zoom: 13,
+				});
+
+				var icon = {
+		          url: 'img/heart.png',
+		          scaledSize: new google.maps.Size(50, 50), // size
+		        }
+
+		        marker = new google.maps.Marker({
+		          position: {lat:  20.5902835, lng: -100.3926442},
+		          draggable: true,
+      			  animation: google.maps.Animation.DROP,
+		          icon: icon,
+		          map: map,
+		        });
+      		}		
+
+      		await navigator.geolocation.getCurrentPosition(localizacion, error);
+      	}
+
+      	const usuario = sessionStorage.getItem('usuario');
+		const usuarioJSON = JSON.parse(usuario);
+      	const URL = `http://127.0.0.1:8000/extravios/nuevo_extravio/${usuarioJSON.user.username}/`;
+      	const htmlModalCarga = modalCarga();
+		const htmlElementoCarga = crearTemplate(htmlModalCarga);
+		const htmlModalExito = modalExito();
+		const htmlElementoExito = crearTemplate(htmlModalExito);
+		let insertar = document.querySelector('.insertar');
+
+      	async function mandarData(url, data){
+			const response = await fetch(url, {
+				method: 'POST',
+				body: data,
+			})
+			const resp = await response.json()
+			return resp;
+		}
+
+		function modalCarga(){
+			return(
+				`
+				<div class="modal" id="modalCarga">
+			        <div class="contModal"></div>
+			        <h2>Cargando...</h2>
+			        <i class="fas fa-dog"></i>
+			    </div>
+				`
+			)
+		}
+
+		function modalExito(){
+			const nombre = usuarioJSON.usuario.nombre.split(' ');
+			return (
+				`
+				<div class="modal" id="modalExito">
+					<div class="contModal"></div>
+					<h2>¡Adopcion publicada!<br>!Gracias por ayudar ${nombre[0]}¡</h2>
+					<img src="img/heart.png" alt="">
+				</div>
+				` 
+			)
+		}
+
+		function crearTemplate(HTMLString){
+			const html = document.implementation.createHTMLDocument();
+			html.body.innerHTML = HTMLString;
+			return html.body.children[0]
+		}
+      	const $form = document.getElementById('formExtravio');
+      	$form.addEventListener('submit', async (e) => {
+      		e.preventDefault();
+
+      		const form = new FormData();
+			form.append('anuncio', document.getElementById('anuncio').value);
+			form.append('recompensa', document.getElementById('recompensa').value);
+			form.append('raza', document.getElementById('raza').value);
+			form.append('color', document.getElementById('color').value);
+			form.append('fechaExtravio', document.getElementById('fechaExtravio').value);
+			form.append('nombre', document.getElementById('nombre').value);
+			form.append('tamanio', document.getElementById('tamanio').value);
+			form.append('senasPart', document.getElementById('senasPart').value);
+			form.append('latitud', marker.position.lat());
+			form.append('longitud', marker.position.lng());
+			form.append('descripcion', document.getElementById('descrpcion').value);
+			form.append('foto', document.getElementById('foto').files[0]);
+
+			try{
+				insertar.append(htmlElementoCarga);
+				const data = await mandarData(URL, form);
+				if(data.success){
+					insertar.innerHTML = "";
+					insertar.after(htmlElementoExito);
+					insertar.innerHTML = "";
+					setTimeout(() => {
+						window.location.href = 'extravíos.html';
+					}, 2000);
+				} else {
+					insertar.innerHTML = "";
+					for(const error in data){
+						console.log(data)
+						if(error === 'foto'){
+							const p = document.createElement('p');
+							p.textContent = '¡Formato de archivo invalido!.\n Solo fotos con extencion .jpg, .jpeg o png.';
+							$foto = document.getElementById('referenciaFoto');
+							ref = $foto.nextElementSibling;
+							$fotoRef = document.getElementById('referenciaFoto').parentNode;
+							$fotoRef.insertBefore(p, ref);
+							$form.addEventListener('submit', (e) => {
+								p.remove()
+							})
+						}
+					}
+				}
+			} catch(error){
+				alert(error);
+			}
+      	})
+
+      	function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
+	</script>
+</html>

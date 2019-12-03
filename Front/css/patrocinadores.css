@@ -1,0 +1,40 @@
+.a {
+	background-color: var(--grisFondo);
+	background-color: red;
+}
+
+
+.container-fluid{
+	margin-left: .4em;
+	margin-right: .4em;
+	width: calc(100% - .8em);
+}
+
+.cont{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.contPrincipal{
+	padding-top: 1em;
+}
+
+.contPrincipal p{
+	width: 100%;
+	padding: 5px 10px;
+	text-align: center;
+	color: var(--gris);
+}
+
+.imgPatrocinador{
+	display: flex;
+	align-items: center;
+	/*align-items - pone centrado de forma vertical*/
+	margin-bottom: 1.5em;
+}
+
+.imgPatrocinador img{
+	width: 100%;
+	box-shadow: -2px 5px 5px 5px rgba(0,0,0,.06);
+}
